@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>木木火的情绪碎片</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 70% 25%,
+                    rgba(122, 102, 190, 0.25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    145deg,
+                    #171631 0%,
+                    #28204d 45%,
+                    #40316d 100%
+                );
+
+            color: #f7f3ff;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "PingFang SC",
+                "Microsoft YaHei",
+                sans-serif;
+        }
+
+        /* 星星 */
+
+        .star {
+            position: fixed;
+
+            width: 3px;
+            height: 3px;
+
+            background:
+                rgba(255, 255, 255, 0.8);
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 8px
+                rgba(255, 255, 255, 0.5);
+        }
+
+        .star1 {
+            top: 16%;
+            left: 18%;
+        }
+
+        .star2 {
+            top: 30%;
+            right: 16%;
+
+            width: 2px;
+            height: 2px;
+        }
+
+        .star3 {
+            top: 62%;
+            left: 12%;
+
+            width: 2px;
+            height: 2px;
+        }
+
+        .star4 {
+            top: 73%;
+            right: 20%;
+        }
+                .star5 {
+            top: 13%;
+            right: 35%;
+
+            width: 2px;
+            height: 2px;
+        }
+
+        /* 月亮 */
+
+        .moon {
+            position: fixed;
+
+            top: 8%;
+            right: 12%;
+
+            width: 72px;
+            height: 72px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle at 35% 35%,
+                    #fffdf5 0%,
+                    #eee9dc 55%,
+                    #d7d0d5 100%
+                );
+
+            box-shadow:
+                0 0 25px
+                rgba(255, 249, 230, 0.25),
+
+                0 0 60px
+                rgba(190, 175, 255, 0.12);
+
+            z-index: 100;
+            pointer-events: auto;
+        }
+                /* 首页 */
+
+        .home {
+            width: 100%;
+            height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+        }
+
+        .home.hide {
+            opacity: 0;
+
+            transform:
+                scale(1.03);
+
+            pointer-events: none;
+        }
+
+        .container {
+            width: 88%;
+            max-width: 430px;
+
+            text-align: center;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        h1 {
+            margin: 0 0 42px;
+
+            font-size: 28px;
+            font-weight: 400;
+
+            letter-spacing: 4px;
+
+            color: #faf8ff;
+        }
+                textarea {
+            display: block;
+
+            width: 100%;
+            min-height: 150px;
+
+            padding: 20px;
+
+            resize: none;
+
+            border: 1px solid
+                rgba(255, 255, 255, 0.18);
+
+            border-radius: 18px;
+
+            outline: none;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            color: #ffffff;
+
+            font-size: 16px;
+            line-height: 1.8;
+
+            backdrop-filter: blur(12px);
+        }
+
+        textarea::placeholder {
+            color:
+                rgba(255, 255, 255, 0.58);
+        }
+
+        textarea:focus {
+            border-color:
+                rgba(255, 255, 255, 0.35);
+        }
+
+        button {
+            margin-top: 28px;
+
+            padding: 12px 30px;
+
+            border: 1px solid
+                rgba(255, 255, 255, 0.25);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            color: #ffffff;
+
+            font-size: 15px;
+
+            letter-spacing: 2px;
+
+            cursor: pointer;
+        }
+                button:active {
+            transform: scale(0.95);
+
+            background:
+                rgba(255, 255, 255, 0.18);
+        }
+
+        .hint {
+            margin-top: 18px;
+
+            font-size: 12px;
+
+            color:
+                rgba(255, 255, 255, 0.35);
+
+            letter-spacing: 1px;
+        }
+
+        /* 回收提示 */
+
+        .message {
+            position: fixed;
+
+            inset: 0;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px;
+
+            text-align: center;
+
+            font-size: 20px;
+
+            letter-spacing: 2px;
+
+            line-height: 1.8;
+
+            opacity: 0;
+
+            pointer-events: none;
+                        transform:
+                translateY(10px);
+
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+
+            z-index: 10;
+        }
+
+        .message.show {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+        /* 纸张 */
+
+        .paper-stage {
+            position: fixed;
+
+            inset: 0;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 28px;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition:
+                opacity 1s ease;
+
+            z-index: 20;
+        }
+
+        .paper-stage.show {
+            opacity: 1;
+
+            pointer-events: auto;
+        }
+                .paper {
+            width:
+                min(86vw, 520px);
+
+            min-height: 220px;
+
+            padding: 36px 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff4c9,
+                    #f8e9b5
+                );
+
+            color: #514936;
+
+            border-radius: 3px;
+
+            box-shadow:
+                0 20px 70px
+                rgba(0, 0, 0, 0.35);
+
+            transform:
+                rotate(-1deg)
+                scale(0.92);
+
+            transition:
+                transform 0.8s ease;
+
+            position: relative;
+        }
+
+        .paper-stage.show .paper {
+            transform:
+                rotate(-1deg)
+                scale(1);
+        }
+
+        .paper-text {
+            white-space: pre-wrap;
+
+            font-size: 17px;
+
+            line-height: 2;
+
+            text-align: left;
+
+            min-height: 120px;
+        }
+
+        .paper-note {
+            margin-top: 28px;
+
+            text-align: center;
+
+            font-size: 12px;
+
+            color:
+                rgba(81, 73, 54, 0.55);
+
+            letter-spacing: 1px;
+        }
+                /* 撕纸画布 */
+
+        #tearCanvas {
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 5;
+
+            touch-action: none;
+
+            user-select: none;
+            -webkit-user-select: none;
+
+            pointer-events: auto;
+        }
+
+        /* 撕纸次数 */
+
+        .tear-count {
+            position: fixed;
+
+            bottom: 34px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            color:
+                rgba(255, 255, 255, 0.65);
+
+            font-size: 13px;
+
+            letter-spacing: 2px;
+
+            opacity: 0;
+
+            transition:
+                opacity 0.5s ease;
+
+            z-index: 30;
+        }
+                .paper-stage.show .tear-count {
+            opacity: 1;
+        }
+
+        /* 撕裂线 */
+
+        .tear-line {
+            position: absolute;
+
+            height: 3px;
+
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(120, 90, 55, 0.5) 0px,
+                    rgba(120, 90, 55, 0.5) 6px,
+                    transparent 6px,
+                    transparent 10px
+                );
+
+            transform-origin: left center;
+
+            pointer-events: none;
+
+            z-index: 10;
+
+            opacity: 0.85;
+
+            animation:
+                tearAppear 0.25s ease-out;
+        }
+
+        /* 撕开的纸片 */
+
+        .tear-pieces {
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+
+            z-index: 8;
+        }
+
+        .tear-fragment {
+            position: absolute;
+
+            background: #f7edc8;
+
+            border: 1px solid
+                rgba(120, 90, 55, 0.18);
+
+            overflow: hidden;
+
+            pointer-events: none;
+
+            z-index: 9;
+        }
+                .fragment-text {
+            position: absolute;
+
+            left: 30px;
+            top: 36px;
+
+            width: calc(100% - 60px);
+
+            font-size: 17px;
+
+            line-height: 2;
+
+            color: #514936;
+
+            white-space: pre-wrap;
+        }
+
+        /* 收好按钮 */
+
+        #collectTorn {
+            position: fixed;
+
+            left: 50%;
+            bottom: 70px;
+
+            transform:
+                translateX(-50%);
+
+            margin: 0;
+
+            z-index: 40;
+
+            opacity: 0;
+
+            animation:
+                collectAppear 0.6s ease
+                forwards;
+        }
+
+        @keyframes collectAppear {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateX(-50%)
+                    translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateX(-50%)
+                    translateY(0);
+            }
+
+        }
+                /* 拼成星星 */
+
+        .star-piece {
+            left: 50% !important;
+            top: 50% !important;
+
+            transform:
+                translate(
+                    calc(-50% + var(--star-x)),
+                    calc(-50% + var(--star-y))
+                )
+                rotate(var(--star-rotate))
+                scale(var(--star-scale));
+
+            transition:
+                transform 1.4s
+                cubic-bezier(0.22, 1, 0.36, 1);
+
+            box-shadow:
+                0 8px 30px
+                rgba(0, 0, 0, 0.18);
+        }
+
+        .paper-stage.star-finished {
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    rgba(116, 99, 180, 0.18),
+                    transparent 45%
+                );
+        }
+
+        .paper-stage.star-finished
+        .tear-fragment {
+            filter:
+                drop-shadow(
+                    0 0 12px
+                    rgba(255, 244, 190, 0.35)
+                );
+        }
+                @keyframes tearAppear {
+
+            from {
+                opacity: 0;
+                transform:
+                    scaleX(0.7);
+            }
+
+            to {
+                opacity: 0.85;
+                transform:
+                    scaleX(1);
+            }
+
+        }
+
+        /* 撕开后隐藏原纸内容 */
+
+        .paper.paper-torn {
+            background: transparent;
+
+            box-shadow: none;
+        }
+
+        .paper.paper-torn
+        .paper-text,
+        .paper.paper-torn
+        .paper-note {
+            opacity: 0;
+        }
+
+        .paper.paper-torn::before,
+        .paper.paper-torn::after {
+            display: none;
+        }
+                /* 输入框点击修复 */
+
+        .container {
+            position: relative;
+
+            z-index: 50;
+        }
+
+        textarea {
+            position: relative;
+
+            z-index: 51;
+
+            pointer-events: auto;
+        }
+
+        .container button {
+            position: relative;
+
+            z-index: 51;
+        }
+        /* 自动折星星：隐藏旧撕纸功能 */
+
+        #tearCanvas,
+        #tearCount,
+        #tearPieces,
+        #collectTorn {
+            display: none !important;
+        }
+
+
+        .paper {
+            position: relative;
+
+            transform-origin:
+                center center;
+
+            will-change:
+                transform,
+                clip-path,
+                opacity;
+        }
+        /* 纸张折叠动画 */
+
+        .paper.folding {
+            animation:
+                paperFold
+                1.3s
+                cubic-bezier(
+                    0.65,
+                    0,
+                    0.35,
+                    1
+                )
+                forwards;
+        }
+
+
+        .paper.folding .paper-text {
+            animation:
+                textFade
+                0.8s
+                ease
+                forwards;
+        }
+        @keyframes paperFold {
+
+            0% {
+                clip-path:
+                    polygon(
+                        0% 0%,
+                        25% 0%,
+                        50% 0%,
+                        75% 0%,
+                        100% 0%,
+                        100% 50%,
+                        100% 100%,
+                        50% 100%,
+                        0% 100%,
+                        0% 50%
+                    );
+
+                transform:
+                    perspective(800px)
+                    rotateX(0deg)
+                    rotateY(0deg)
+                    rotate(0deg)
+                    scale(1);
+            }
+
+
+            45% {
+                transform:
+                    perspective(800px)
+                    rotateX(25deg)
+                    rotateY(-20deg)
+                    rotate(8deg)
+                    scale(0.72);
+            }
+                        100% {
+                clip-path:
+                    polygon(
+                        50% 0%,
+                        61% 35%,
+                        98% 35%,
+                        68% 57%,
+                        79% 100%,
+                        50% 73%,
+                        21% 100%,
+                        32% 57%,
+                        2% 35%,
+                        39% 35%
+                    );
+
+                transform:
+                    perspective(800px)
+                    rotateX(0deg)
+                    rotateY(0deg)
+                    rotate(360deg)
+                    scale(0.28);
+            }
+        }
+
+
+        @keyframes textFade {
+
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+        .paper.star-rising {
+            animation:
+                starRise
+                1.7s
+                cubic-bezier(
+                    0.22,
+                    0.61,
+                    0.36,
+                    1
+                )
+                forwards;
+        }
+
+
+        @keyframes starRise {
+
+            0% {
+                transform:
+                    translateY(0)
+                    scale(0.28)
+                    rotate(360deg);
+
+                opacity: 1;
+            }
+
+            100% {
+                transform:
+                    translateY(-42vh)
+                    scale(0.16)
+                    rotate(450deg);
+
+                opacity: 0.95;
+            }
+        }
+        .paper.star-rising {
+            filter:
+                drop-shadow(
+                    0 0 6px
+                    rgba(255, 245, 190, 0.8)
+                )
+                drop-shadow(
+                    0 0 18px
+                    rgba(190, 175, 255, 0.55)
+                );
+        }
+
+
+        .paper.star-complete {
+            filter:
+                drop-shadow(
+                    0 0 8px
+                    rgba(255, 245, 190, 0.9)
+                )
+                drop-shadow(
+                    0 0 22px
+                    rgba(190, 175, 255, 0.6)
+                );
+
+            cursor: pointer;
+        }
+
+        .paper.star-rising,
+        .paper.star-complete {
+            width: 120px !important;
+            height: 120px !important;
+
+            min-height: 120px !important;
+
+            padding: 0 !important;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff8c9 0%,
+                    #f7e9a8 100%
+                ) !important;
+
+            border-radius: 0 !important;
+
+            border: none !important;
+
+            box-shadow: none !important;
+
+            overflow: visible !important;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        /* 强制保持五角星形状 */
+
+        .paper.star-rising,
+        .paper.star-complete {
+
+            clip-path:
+                polygon(
+                    50% 0%,
+                    61% 35%,
+                    98% 35%,
+                    68% 57%,
+                    79% 100%,
+                    50% 73%,
+                    21% 100%,
+                    32% 57%,
+                    2% 35%,
+                    39% 35%
+                ) !important;
+
+            -webkit-clip-path:
+                polygon(
+                    50% 0%,
+                    61% 35%,
+                    98% 35%,
+                    68% 57%,
+                    79% 100%,
+                    50% 73%,
+                    21% 100%,
+                    32% 57%,
+                    2% 35%,
+                    39% 35%
+                ) !important;
+        }
+
+        /* 星星升空后的最终状态 */
+
+        .paper.star-complete {
+            animation: none !important;
+
+            transform:
+                translateY(-42vh)
+                scale(0.16)
+                rotate(450deg) !important;
+
+            opacity: 0.95 !important;
+
+            pointer-events: auto;
+        }
+
+
+        .paper.star-complete .paper-text {
+            opacity: 0 !important;
+        }
+
+        /* 星空中的独立星星 */
+
+        .star-field {
+            position: fixed;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+
+            z-index: 5;
+        }
+
+
+        .sky-star {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            width: 120px !important;
+            height: 120px !important;
+
+            padding: 0 !important;
+
+            margin: 0 !important;
+
+            opacity: 0;
+        }
+
+        .sky-star.star-rising {
+            animation:
+                skyStarRise
+                1.7s
+                cubic-bezier(
+                    0.22,
+                    0.61,
+                    0.36,
+                    1
+                )
+                forwards;
+        }
+
+
+        @keyframes skyStarRise {
+
+            0% {
+                left: 50%;
+                top: 50%;
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(0.28)
+                    rotate(360deg);
+
+                opacity: 0;
+            }
+
+
+            100% {
+                left:
+                    calc(
+                        50% +
+                        var(--star-x)
+                    );
+
+                top:
+                    calc(
+                        50% +
+                        var(--star-y)
+                    );
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(0.16)
+                    rotate(450deg);
+
+                opacity: 0.95;
+            }
+        }
+
+        .sky-star {
+            clip-path:
+                polygon(
+                    50% 0%,
+                    61% 35%,
+                    98% 35%,
+                    68% 57%,
+                    79% 100%,
+                    50% 73%,
+                    21% 100%,
+                    32% 57%,
+                    2% 35%,
+                    39% 35%
+                ) !important;
+
+            -webkit-clip-path:
+                polygon(
+                    50% 0%,
+                    61% 35%,
+                    98% 35%,
+                    68% 57%,
+                    79% 100%,
+                    50% 73%,
+                    21% 100%,
+                    32% 57%,
+                    2% 35%,
+                    39% 35%
+                ) !important;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff8c9 0%,
+                    #f7e9a8 100%
+                ) !important;
+
+            filter:
+                drop-shadow(
+                    0 0 7px
+                    rgba(255, 245, 190, 0.9)
+                )
+                drop-shadow(
+                    0 0 20px
+                    rgba(190, 175, 255, 0.6)
+                );
+        }
+
+        .sky-star.star-complete {
+            animation: none !important;
+
+            left:
+                calc(
+                    50% +
+                    var(--star-x)
+                ) !important;
+
+            top:
+                calc(
+                    50% +
+                    var(--star-y)
+                ) !important;
+
+            transform:
+                translate(-50%, -50%)
+                scale(0.16)
+                rotate(450deg) !important;
+
+            opacity: 0.95 !important;
+
+            pointer-events: auto;
+        }
+        /* 情绪卡片 */
+
+        #emotionCard {
+            position: fixed;
+
+            left: 50%;
+            top: 50%;
+
+            width: min(
+                72vw,
+                420px
+            );
+
+            min-height: 120px;
+
+            padding: 28px 30px;
+
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                )
+                scale(0.92);
+
+            opacity: 0;
+
+            z-index: 100;
+
+            background:
+                rgba(
+                    255,
+                    248,
+                    218,
+                    0.94
+                );
+
+            color: #514765;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 12px 45px
+                rgba(
+                    10,
+                    8,
+                    30,
+                    0.35
+                );
+
+            font-size: 16px;
+
+            line-height: 1.9;
+
+            text-align: left;
+
+            transition:
+                opacity 0.35s ease,
+                transform 0.35s ease;
+
+            pointer-events: none;
+        }
+        #emotionCard.show {
+            opacity: 1;
+
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                )
+                scale(1);
+        }
+
+
+        #emotionCard::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            border-radius: 18px;
+
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.45
+                    ),
+                    transparent 55%
+                );
+
+            pointer-events: none;
+        }
+        #emotionCard {
+            cursor: pointer;
+        }
+
+
+        #emotionCard.show {
+            pointer-events: auto;
+        }
+
+
+        #emotionCard.show::after {
+            content:
+                "开心宇宙已开启星星消亡模式";
+
+            display: block;
+
+            margin-top: 18px;
+
+            font-size: 12px;
+
+            color: #9b91ad;
+
+            text-align: center;
+
+            letter-spacing: 1px;
+        }
+
+        #moonLetter {
+            position: fixed;
+
+            left: 50%;
+            top: 50%;
+
+            width: min(78vw, 420px);
+
+            padding: 30px;
+
+            transform:
+                translate(-50%, -50%)
+                scale(0.92);
+
+            opacity: 0;
+
+            z-index: 200;
+
+            background:
+                rgba(255, 248, 218, 0.96);
+
+            color: #514765;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 12px 45px
+                rgba(10, 8, 30, 0.35),
+
+                0 0 35px
+                rgba(255, 249, 230, 0.18);
+
+            font-size: 16px;
+
+            line-height: 1.9;
+
+            text-align: left;
+
+            transition:
+                opacity 0.35s ease,
+                transform 0.35s ease;
+
+            pointer-events: none;
+        }
+
+        #moonLetter.show {
+            opacity: 1;
+
+            transform:
+                translate(-50%, -50%)
+                scale(1);
+
+            pointer-events: auto;
+        }
+
+        .moon-letter-text {
+            white-space: pre-wrap;
+        }
+
+        .moon-letter-close {
+            margin-top: 20px;
+
+            text-align: center;
+
+            font-size: 12px;
+
+            color: #9b91ad;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+        }
+
+        #skyMessage {
+            position: fixed;
+
+            left: 50%;
+            top: 42%;
+
+            width: min(80vw, 560px);
+
+            transform:
+                translate(-50%, -50%);
+
+            text-align: center;
+
+            color:
+                rgba(255, 250, 235, 0.92);
+
+            font-size: 17px;
+
+            line-height: 1.9;
+
+            letter-spacing: 1.5px;
+
+            white-space: pre-line;
+
+            text-shadow:
+                0 0 12px
+                rgba(255, 249, 230, 0.5),
+
+                0 0 30px
+                rgba(190, 175, 255, 0.3);
+
+            opacity: 0;
+
+            z-index: 80;
+
+            pointer-events: none;
+
+            transition:
+                opacity 1s ease;
+        }
+
+        #skyMessage.show {
+            opacity: 1;
+        }
+
+
+
+</style>
+</head>
+
+<body>
+
+    <!-- 星星 -->
+
+    <div class="star star1"></div>
+    <div class="star star2"></div>
+    <div class="star star3"></div>
+    <div class="star star4"></div>
+    <div class="star star5"></div>
+
+    <!-- 月亮 -->
+
+    <div class="moon"></div>
+
+    <!-- 首页 -->
+
+    <section class="home" id="home">
+
+        <main class="container">
+
+            <h1>木木火的情绪碎片</h1>
+
+            <textarea
+                id="emotion"
+                placeholder="听说你不开心٩(*´◒`*)۶"
+            ></textarea>
+
+            <button id="collect">
+                回收ing
+            </button>
+
+            <div class="hint">
+                开心宇宙烦恼邮件投递处
+            </div>
+
+        </main>
+
+    </section>    <!-- 回收提示 -->
+
+    <div class="message" id="message">
+        开心宇宙已回收地球非正常情绪
+    </div>
+
+
+        <!-- 撕纸区域 -->
+
+    <div class="paper-stage" id="paperStage">
+
+        <div
+            class="paper"
+            id="paper"
+        >
+
+            <div
+                class="paper-text"
+                id="paperText"
+            ></div>
+
+            <!-- 撕纸轨迹 -->
+
+            <canvas
+                id="tearCanvas"
+            ></canvas>
+
+            <div
+                id="tearPieces"
+                class="tear-pieces"
+            ></div>
+
+        </div>
+
+        <!-- 撕纸次数 -->
+
+        <div
+            class="tear-count"
+            id="tearCount"
+        >
+            0 / 5
+        </div>
+
+    </div>
+
+    <script>
+        const starField =
+            document.createElement("div");
+
+        starField.className =
+            "star-field";
+
+        document.body.appendChild(
+            starField
+        );
+
+
+        let starIndex = 0;
+
+        function getStarPosition(index) {
+
+            const positions = [
+                [-43, -35],
+                [-18, -43],
+                [12, -39],
+                [39, -31],
+
+                [46, -8],
+                [35, 14],
+                [43, 36],
+
+                [16, 43],
+                [-12, 37],
+                [-39, 30],
+
+                [-47, 7],
+                [-32, -15],
+
+                [-27, -29],
+                [28, -22],
+                [31, 25],
+                [-23, 28]
+            ];
+
+            return positions[
+                index % positions.length
+            ];
+        }
+
+        function placeStar(
+            star,
+            index
+        ) {
+
+            const allStars =
+                starField.querySelectorAll(
+                    ".sky-star"
+                );
+
+            const starCount =
+                allStars.length;
+
+            let minDistance =
+                Math.max(
+                    6,
+                    18 -
+                    starCount * 0.35
+                );
+
+            let position = null;
+
+            const maxAttempts =
+                500;
+
+            for (
+                let attempt = 0;
+                attempt < maxAttempts;
+                attempt++
+            ) {
+
+                const x =
+                    Math.random() * 90 - 45;
+
+                const y =
+                    Math.random() * 82 - 41;
+
+                /*
+                 * 中央安全区域
+                 * 避开：
+                 * 木木火的情绪碎片
+                 * 输入框
+                 * 回收按钮
+                 */
+                if (
+                    x > -22 &&
+                    x < 22 &&
+                    y > -18 &&
+                    y < 18
+                ) {
+                    continue;
+                }
+
+                let tooClose = false;
+
+                allStars.forEach(
+                    (otherStar) => {
+
+                        const otherX =
+                            parseFloat(
+                                otherStar.style.getPropertyValue(
+                                    "--star-x"
+                                )
+                            );
+
+                        const otherY =
+                            parseFloat(
+                                otherStar.style.getPropertyValue(
+                                    "--star-y"
+                                )
+                            );
+
+                        if (
+                            isNaN(otherX) ||
+                            isNaN(otherY)
+                        ) {
+                            return;
+                        }
+
+                        const distance =
+                            Math.sqrt(
+                                Math.pow(
+                                    x -
+                                    otherX,
+                                    2
+                                ) +
+                                Math.pow(
+                                    y -
+                                    otherY,
+                                    2
+                                )
+                            );
+
+                        if (
+                            distance <
+                            minDistance
+                        ) {
+                            tooClose = true;
+                        }
+
+                    }
+                );
+
+                if (
+                    !tooClose
+                ) {
+
+                    position = [
+                        x,
+                        y
+                    ];
+
+                    break;
+
+                }
+
+            }
+
+            /*
+             * 如果天空已经很满，
+             * 允许降低距离要求，
+             * 但仍然不会进入中央安全区。
+             */
+            if (
+                !position
+            ) {
+
+                for (
+                    let attempt = 0;
+                    attempt < 500;
+                    attempt++
+                ) {
+
+                    const x =
+                        Math.random() *
+                        90 -
+                        45;
+
+                    const y =
+                        Math.random() *
+                        82 -
+                        41;
+
+                    if (
+                        x > -22 &&
+                        x < 22 &&
+                        y > -18 &&
+                        y < 18
+                    ) {
+                        continue;
+                    }
+
+                    position = [
+                        x,
+                        y
+                    ];
+
+                    break;
+
+                }
+
+            }
+
+            star.style.setProperty(
+                "--star-x",
+                `${position[0]}vw`
+            );
+
+            star.style.setProperty(
+                "--star-y",
+                `${position[1]}vh`
+            );
+
+        }
+
+        function saveStars() {
+
+            const stars =
+                [];
+
+            const allStars =
+                starField.querySelectorAll(
+                    ".sky-star"
+                );
+
+            allStars.forEach(
+                (star) => {
+
+                    stars.push({
+                        emotion:
+                            star.dataset.emotion,
+
+                        index:
+                            star.dataset.starIndex,
+
+                        x:
+                            star.style.getPropertyValue(
+                                "--star-x"
+                            ),
+
+                        y:
+                            star.style.getPropertyValue(
+                                "--star-y"
+                            )
+
+                    });
+
+                }
+            );
+
+            localStorage.setItem(
+                "moonStars",
+                JSON.stringify(
+                    stars
+                )
+            );
+
+        }
+
+        function loadStars() {
+
+            const savedStars =
+                JSON.parse(
+                    localStorage.getItem(
+                        "moonStars"
+                    ) || "[]"
+                );
+
+            savedStars.forEach(
+                (item) => {
+
+                    const star =
+                        paper.cloneNode(true);
+
+                    star.classList.remove(
+                        "folding",
+                        "star-rising",
+                        "star-complete",
+                        "star-ready"
+                    );
+
+                    star.classList.add(
+                        "sky-star"
+                    );
+
+                    star.classList.remove(
+                        "paper"
+                    );
+
+                    const paperNote =
+                        star.querySelector(
+                            ".paper-note"
+                        );
+
+                    if (paperNote) {
+                        paperNote.remove();
+                    }
+
+                    const tearCanvas =
+                        star.querySelector(
+                            "#tearCanvas"
+                        );
+
+                    if (tearCanvas) {
+                        tearCanvas.remove();
+                    }
+
+                    const tearPieces =
+                        star.querySelector(
+                            "#tearPieces"
+                        );
+
+                    if (tearPieces) {
+                        tearPieces.remove();
+                    }
+
+                    
+                    star.classList.add(
+                        "star-complete"
+                    );
+
+                    star.dataset.emotion =
+                        item.emotion;
+
+                    star.dataset.starIndex =
+                        item.index;
+
+                    star.style.setProperty(
+                        "--star-index",
+                        item.index
+                    );
+
+                    if (
+                        item.x &&
+                        item.y
+                    ) {
+
+                        star.style.setProperty(
+                            "--star-x",
+                            item.x
+                        );
+
+                        star.style.setProperty(
+                            "--star-y",
+                            item.y
+                        );
+
+                    } else {
+
+                        placeStar(
+                            star,
+                            Number(item.index)
+                        );
+
+                    }
+
+                    starField.appendChild(
+                        star
+                    );
+
+                }
+            );
+
+            starIndex =
+                savedStars.length;
+
+        }
+
+        function createStarFromPaper() {
+
+            const star =
+                paper.cloneNode(true);
+
+            star.classList.remove(
+                "folding",
+                "star-rising",
+                "star-complete",
+                "star-ready"
+            );
+
+            star.classList.add(
+                "sky-star"
+            );
+
+            const paperNote =
+                star.querySelector(
+                    ".paper-note"
+                );
+
+            if (paperNote) {
+                paperNote.remove();
+            }
+
+            const tearCanvas =
+                star.querySelector(
+                    "#tearCanvas"
+                );
+
+            if (tearCanvas) {
+                tearCanvas.remove();
+            }
+
+            const tearPieces =
+                star.querySelector(
+                    "#tearPieces"
+                );
+
+            if (tearPieces) {
+                tearPieces.remove();
+            }
+
+            const starText =
+                paperText.textContent;
+
+            star.dataset.emotion =
+                starText;
+
+            star.dataset.starIndex =
+                starIndex;
+
+            star.style.setProperty(
+                "--star-index",
+                starIndex
+            );
+
+            placeStar(
+                star,
+                starIndex
+            );
+
+            starIndex++;
+
+            starField.appendChild(
+                star
+            );
+
+            saveStars();
+
+            return star;
+        }
+
+
+        starField.addEventListener(
+            "click",
+            (event) => {
+
+                const star =
+                    event.target.closest(
+                        ".sky-star"
+                    );
+
+                if (!star) {
+                    return;
+                }
+
+                const text =
+                    star.dataset.emotion;
+
+                if (!text) {
+                    return;
+                }
+
+                showEmotionCard(
+                    text
+                );
+            }
+        );
+
+
+        function showEmotionCard(text) {
+
+            let card =
+                document.getElementById(
+                    "emotionCard"
+                );
+
+            if (!card) {
+
+                card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.id =
+                    "emotionCard";
+
+                document.body.appendChild(
+                    card
+                );
+            }
+
+            card.textContent =
+                text;
+
+            card.onclick = () => {
+                card.classList.remove(
+                    "show"
+                );
+            };
+
+            card.classList.add(
+                "show"
+            );
+        }
+
+        const skyMessages = [
+
+            "相信自己，相信相信的力量，这样你就可以成为自己想成为的那个大人٩(*´◒`*)۶wohu~",
+
+            "关关难过关关过，当你认定它是困难的时候它就是困难，但如果你说它不是困难，那就是easy(*ฅ́˘ฅ̀*)♡",
+
+            "内耗何尝不是在反向地推动自己进步呢ଲ",
+
+            "焦虑没什么可怕的，就像烤肉，焦一点更好😋",
+
+            "我问小狗不开心怎么办，小狗说忘忘忘(ᕑᗢᓫ∗)˒",
+
+            "一个猎人开枪打了一只狐狸，然后猎人死了，狐狸说：“哈哈哈，我是反射弧。”(๑˃̵ᴗ˂̵)و",
+
+            "你知道富士山在哪里吗？\n在-12和-14之间｡｡꒰ ´･~･꒱੭՞՞",
+
+            "你今天笑了吗？\n没笑的话可以吃点西药，因为西药笑。*⸌☻ັ⸍*",
+
+            "来喽！让我看看有谁来投递烦恼了？\n原来是你呀，收到收到，剩下的就交给我吧。",
+
+            "收起伤感的眼神\n继续做我混的人\n带我独闯南天门\n成为不败的战神\n看过了100单8将\n水泊子水打在芦苇荡\n谁人来到了梁山上\n头把脚也在堂上放",
+
+            "如果人生中无法规避那段痛苦\n那就祝你早去早回",
+
+            "吃饱睡好\n关于明天的事后天就知道了",
+
+            "当你快坚持不住的时候\n困难也快坚持不住了",
+
+            "生命的本质是呼吸\n所以起伏也算命中注定",
+
+            "夜色难免黑凉，前行必有曙光",
+
+            "花会沿路盛开，你以后的路也是",
+
+            "终点不是朝圣的意义\n起点才是",
+
+            "绵绵用力 久久为功\n人生缓缓 徐徐图之",
+
+            "知命不惧日日自新",
+
+            "你来看星星吗？\n月亮说 Lost Stars- Adam Levine 很好听",
+
+            "人生处处碰壁，就是碰不到人民币。",
+
+            "不要老是和别人比，比弊时，我们会感到自卑，比利时，是一个欧洲国家。利弊相比时，弊少于利，多利是一只克隆羊。利少于弊，多弊is free",
+
+            "遇到至暗时刻就得站起来因为至暗站",
+
+            "乖乖穿上了裙子，就变成了乘乘"
+
+        ];
+
+        function showSkyMessage() {
+
+            let message =
+                document.getElementById(
+                    "skyMessage"
+                );
+
+            if (!message) {
+
+                message =
+                    document.createElement(
+                        "div"
+                    );
+
+                message.id =
+                    "skyMessage";
+
+                document.body.appendChild(
+                    message
+                );
+
+            }
+
+            const randomIndex =
+                Math.floor(
+                    Math.random() *
+                    skyMessages.length
+                );
+
+            message.textContent =
+                skyMessages[randomIndex];
+
+            message.classList.remove(
+                "show"
+            );
+
+            void message.offsetWidth;
+
+            message.classList.add(
+                "show"
+            );
+
+            clearTimeout(
+                window.skyMessageTimer
+            );
+
+            window.skyMessageTimer =
+                setTimeout(
+                    () => {
+
+                        message.classList.remove(
+                            "show"
+                        );
+
+                    },
+                    5000
+                );
+
+        }
+
+        function finishStar() {
+
+            const star =
+                createStarFromPaper();
+
+            star.classList.add(
+                "star-rising"
+            );
+
+            saveStars();
+
+            setTimeout(
+                () => {
+
+                    star.classList.add(
+                        "star-complete"
+                    );
+
+                    showSkyMessage();
+
+                    paperStage.classList.remove(
+                        "show"
+                    );
+
+                    paper.classList.remove(
+                        "folding",
+                        "star-rising",
+                        "star-complete",
+                        "star-ready"
+                    );
+
+                    paper.style.opacity =
+                        "";
+
+                    emotion.value =
+                        "";
+
+                    setTimeout(
+                        () => {
+
+                            home.classList.remove(
+                                "hide"
+                            );
+
+                            isAnimating =
+                                false;
+
+                            emotion.focus();
+
+                        },
+                        5000
+                    );
+
+                },
+                1700
+            );
+
+        }
+
+        const collectButton =
+            document.getElementById("collect");
+
+        const emotion =
+            document.getElementById("emotion");
+
+        const home =
+            document.getElementById("home");
+
+        const message =
+            document.getElementById("message");
+
+        const paperStage =
+            document.getElementById("paperStage");
+
+        const paper =
+            document.getElementById("paper");
+
+        const paperText =
+            document.getElementById("paperText");
+
+        let isAnimating = false;
+
+        loadStars();
+        
+        collectButton.addEventListener(
+            "click",
+            () => {
+
+                if (isAnimating) {
+                    return;
+                }
+
+                const text =
+                    emotion.value.trim();
+
+                if (text === "") {
+                    emotion.focus();
+                    return;
+                }
+
+                isAnimating = true;
+
+                paperText.textContent =
+                    text;
+                paper.classList.remove(
+                    "folding",
+                    "star-rising",
+                    "star-complete",
+                    "star-ready"
+                );
+
+                paper.style.opacity =
+                    "";
+
+                home.classList.add(
+                    "hide"
+                );
+
+                setTimeout(
+                    () => {
+                        message.classList.add(
+                            "show"
+                        );
+                    },
+                    500
+                );
+
+                setTimeout(
+                    () => {
+                        message.classList.remove(
+                            "show"
+                        );
+                    },
+                    2200
+                );
+
+                setTimeout(
+                    () => {
+                        paperStage.classList.add(
+                            "show"
+                        );
+
+                        startPaperFold();
+
+                    },
+                    3000
+                );
+            }
+        );
+
+        function startPaperFold() {
+
+            paper.classList.add(
+                "folding"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    paper.style.opacity =
+                        "0";
+
+                    finishStar();
+
+                },
+                1300
+            );
+
+        }
+
+        paper.addEventListener(
+            "animationend",
+            (event) => {
+
+                if (
+                    event.animationName ===
+                    "paperFold"
+                ) {
+
+                    paper.classList.add(
+                        "star-ready"
+                    );
+
+                }
+
+            }
+        );
+
+
+        paper.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    paper.classList.contains(
+                        "star-ready"
+                    )
+                ) {
+
+                    console.log(
+                        "这颗星星收到了她的情绪 ⭐"
+                    );
+
+                }
+
+            }
+        );
+        window.addEventListener(
+            "beforeunload",
+            () => {
+
+                paper.classList.remove(
+                    "folding"
+                );
+
+                paper.classList.remove(
+                    "star-rising"
+                );
+
+                paper.classList.remove(
+                    "star-complete"
+                );
+
+                paper.classList.remove(
+                    "star-ready"
+                );
+
+            }
+        );
+
+        const moon =
+            document.querySelector(".moon");
+
+
+        if (moon) {
+
+
+            moon.addEventListener(
+                "pointerdown",
+                () => {
+
+
+                    let letter =
+                        document.getElementById(
+                            "moonLetter"
+                        );
+
+                    if (!letter) {
+
+                        letter =
+                            document.createElement(
+                                "div"
+                            );
+
+                        letter.id =
+                            "moonLetter";
+
+                        letter.innerHTML = `
+                            <div class="moon-letter-text"></div>
+
+                            <div class="moon-letter-close">
+                                我知道啦
+                            </div>
+                        `;
+
+                        document.body.appendChild(
+                            letter
+                        );
+                    }
+
+                    letter
+                        .querySelector(
+                            ".moon-letter-text"
+                        )
+                        .textContent =
+                        `木木moon：
+小小的木木站在地上有许多大大的烦恼吗？
+moon帮你把它扔到天上，这样再大的烦恼都会变得很小很小啦！`;
+
+                    letter.classList.add(
+                        "show"
+                    );
+
+                    letter.style.pointerEvents =
+                        "auto";
+
+                    letter
+                        .querySelector(
+                            ".moon-letter-close"
+                        )
+                        .onclick = () => {
+
+                            letter.classList.remove(
+                                "show"
+                            );
+
+                            letter.style.pointerEvents =
+                                "none";
+
+                        };
+
+                }
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
